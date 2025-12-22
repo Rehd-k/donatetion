@@ -1,7 +1,10 @@
-import { Currency, Feather, FolderOpen, LucideCurrency, Rss, SendToBack, University } from "lucide-react";
+import { auth } from "@/auth";
+import LogoutButton from "@/components/logout";
+import { Feather, FolderOpen, LogOut, Rss, SendToBack, University } from "lucide-react";
 import Link from "next/link";
 
-export default function AuraHome() {
+export default async function AuraHome() {
+  const session = await auth();
 
 
   return <>
@@ -32,9 +35,14 @@ export default function AuraHome() {
             </Link>
 
           </nav>
-          <Link href="/dashboard" className="flex min-w-21 cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-blue-700 hover:bg-primary-dark transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em] shadow-md">
-            <span className="truncate">Donate Now</span>
+          {session ? <LogoutButton /> : <Link href="/login" className="flex min-w-30 cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-blue-700 hover:bg-primary-dark transition-all text-white text-base font-bold shadow-lg transform hover:-translate-y-0.5">
+            <span className="truncate">Login</span>
           </Link>
+
+          }
+
+
+
         </div>
       </header>
       {/* Hero Section */}
@@ -58,9 +66,9 @@ export default function AuraHome() {
               </h2>
             </div>
             <div className="flex flex-wrap gap-4 mt-4">
-              <button className="flex min-w-30 cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-blue-700 hover:bg-primary-dark transition-all text-white text-base font-bold shadow-lg transform hover:-translate-y-0.5">
+              <Link href="/dashboard" className="flex min-w-30 cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-blue-700 hover:bg-primary-dark transition-all text-white text-base font-bold shadow-lg transform hover:-translate-y-0.5">
                 <span className="truncate">Donate Now</span>
-              </button>
+              </Link>
               <button className="flex min-w-30 cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white text-base font-bold transition-all">
                 <span className="truncate">View Our Causes</span>
               </button>

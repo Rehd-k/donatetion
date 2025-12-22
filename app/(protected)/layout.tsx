@@ -9,16 +9,8 @@ import { signOut, useSession } from 'next-auth/react';
 
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      window.location.href = '/login';
-    } else if (session?.user.role === 'admin') {
-      window.location.href = '/admin';
-    }
 
-  }, [session, status]);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   // Donation website links: Customize as needed
