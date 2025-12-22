@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
        
 
-        const populated = await Donation.findById(newDonation._id)
+        const populated = await Donation.findById((newDonation as any)._id)
         .populate('user', 'firstName email')
         .populate('campaign', 'title currentAmount');
         console.log(populated)
