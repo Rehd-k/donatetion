@@ -30,8 +30,7 @@ export default function LoginPage() {
             setLoading(false);
         } else {
             toast.success("Welcome back!");
-            router.push("/dashboard"); // Redirect to home
-            router.refresh();
+            setTimeout(() => router.push("/"), 2000);
         }
     };
 
