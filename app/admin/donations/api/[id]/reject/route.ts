@@ -4,11 +4,13 @@ import dbConnect from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
   // Admin check...
 
-  const donation = await Donation.findById(params.id).populate('donor campaign');
+  const { id } = await params;
+
+  const donation = await Donation.findById(id).populate('donor campaign');
   if (!donation || donation.status !== 'pending') {
     return NextResponse.json({ message: 'Invalid donation' }, { status: 400 });
   }
@@ -29,7 +31,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     text: `Your donation of ${donation.amount} ${donation.currency} to ${donation.campaign.title} has been rejected. Please contact support for details.`,
   });
 
-  const populated = await Donation.findById(params.id)
+  const populated = await Donation.findById(id)
     .populate('user', 'firstName email')
     .populate('campaign', 'title currentAmount');
 

@@ -2,10 +2,10 @@ import { Campaign } from '@/lib/model/campaign';
 import dbConnect from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
 
-
+  const { id } = await params;
   const body = await request.json();
 
   // Map goalAmount → targetAmount if frontend still sends old name (optional fallback)
@@ -14,7 +14,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     targetAmount: body.targetAmount
   };
 
-  const updated = await Campaign.findByIdAndUpdate(params.id, updateData, { new: true })
+  const updated = await Campaign.findByIdAndUpdate(id, updateData, { new: true })
     .populate('creator', 'name email');
 
   if (!updated) {
@@ -24,8 +24,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   return NextResponse.json(updated);
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  // Admin check...
-  await Campaign.findByIdAndDelete(params.id);
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  await Campaign.findByIdAndDelete(id);
   return NextResponse.json({ success: true });
 }
