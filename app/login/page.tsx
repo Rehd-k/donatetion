@@ -24,7 +24,6 @@ export default function LoginPage() {
             password,
             redirect: false, // prevents page reload
         });
-        console.log(result);
 
         if (result?.error) {
             toast.error("Invalid email or password");

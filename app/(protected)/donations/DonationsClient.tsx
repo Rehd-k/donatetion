@@ -48,7 +48,7 @@ function ClientDonations({ currency }: { currency: string }) {
             const res = await fetch(`/donations/api?${params.toString()}`);
             if (!res.ok) throw new Error('Failed to fetch');
             const { donations: newDons, hasMore: hm } = await res.json();
-            console.log(newDons)
+      
             setDonations(prev => append ? [...prev, ...newDons] : newDons);
             setHasMore(hm);
             setPage(newPage);

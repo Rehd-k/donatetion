@@ -33,7 +33,7 @@ export async function POST(request: Request) {
         const populated = await Donation.findById((newDonation as any)._id)
         .populate('user', 'firstName email')
         .populate('campaign', 'title currentAmount');
-        console.log(populated)
+ 
         return NextResponse.json(newDonation, { status: 201 });
     } catch (error) {
         console.error('Error creating donation:', error);

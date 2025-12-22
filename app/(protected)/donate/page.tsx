@@ -35,7 +35,6 @@ export default function Donate() {
   }, [campaignId]);
 
   const handleDonate = async () => {
-    console.log('Bank transfer selected');
     const res = await fetch('/donate/api/pending', {
       method: 'POST',
       body: JSON.stringify({ amount, currency, user: session?.user?.id, campaign: campaignId, status: 'pending' }),

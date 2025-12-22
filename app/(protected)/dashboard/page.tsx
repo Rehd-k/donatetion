@@ -1,13 +1,8 @@
 import { auth } from '@/auth'; // Assume your auth utility
-
 import { formatCurrency } from '@/lib/currency';
-
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import { Line, Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
 import { DollarSign, TrendingUp, PieChart as PieIcon, Users } from 'lucide-react'; // Icons for flair
-import { cn } from '@/lib/utils';
 import { Campaign } from '@/lib/model/campaign';
 import { Donation } from '@/lib/model/donation';
 import { User } from '@/lib/model/users';
@@ -15,7 +10,6 @@ import dbConnect from '@/lib/mongodb';
 import LineChartComponent from '@/components/linechart';
 import PieChartComponent from '@/components/piechart';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Title, Tooltip, Legend);
 
 export default async function Dashboard() {
     await dbConnect();
@@ -35,7 +29,7 @@ export default async function Dashboard() {
 
     // Donation trend data (last 6 months, monthly aggregates)
     const trendData = await Donation.aggregate([
-        { $match: { donor: user._id, createdAt: { $gte: new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000) } } },
+        { $match: { user: user._id, createdAt: { $gte: new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000) } } },
         { $group: { _id: { $dateToString: { format: '%Y-%m', date: '$createdAt' } }, total: { $sum: '$amount' } } },
         { $sort: { _id: 1 } },
     ]);
@@ -49,7 +43,7 @@ export default async function Dashboard() {
 
     // Campaign distribution pie (user's donations by campaign)
     const pieData = await Donation.aggregate([
-        { $match: { donor: user._id } },
+        { $match: { user: user._id } },
         { $group: { _id: '$campaign', total: { $sum: '$amount' } } },
         { $lookup: { from: 'campaigns', localField: '_id', foreignField: '_id', as: 'campaign' } },
         { $unwind: '$campaign' },
