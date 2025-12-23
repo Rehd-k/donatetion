@@ -97,8 +97,8 @@ export default function Donate() {
       method: 'POST',
       body: JSON.stringify({ amount, currency, user: session?.user?.id, campaign: campaignId, status: 'pending' }),
     });
-    const { donationId } = await res.json();
-    window.location.href = `/upload-proof?donation=${donationId}&method=${method}&amount=${amount}`;
+    const donationId = await res.json();
+    window.location.href = `/upload-proof?donation=${donationId._id}&method=${method}&amount=${amount}`;
   };
 
   return (
@@ -108,7 +108,7 @@ export default function Donate() {
       </h1> */}
 
       <Card>
-        <CardHeader>Support this Project</CardHeader>
+
         <CardBody className="space-y-8">
           {/* Progress Summary */}
           <div className="text-center space-y-2">
@@ -134,6 +134,7 @@ export default function Donate() {
                   </label>
                   <Input
                     type="number"
+                    min={50}
                     value={amount}
                     onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
                     placeholder="Enter your amount"
@@ -288,8 +289,8 @@ export default function Donate() {
               <div className="space-y-4 grid grid-cols-1 gap-4">
 
                 {[
-                  { value: 10, desc: "Help cover basic upload processing for initial files." },
-                  { value: 25, desc: "Support storage and organization for a batch of uploads." },
+                  // { value: 10, desc: "Help cover basic upload processing for initial files." },
+                  // { value: 25, desc: "Support storage and organization for a batch of uploads." },
                   { value: 50, desc: "Fund enhanced features for multiple user uploads." },
                   { value: 100, desc: "Enable faster processing and security for more files." },
                   { value: 250, desc: "Contribute to platform improvements for larger uploads." },

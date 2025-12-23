@@ -4,7 +4,7 @@ import dbConnect from '@/lib/mongodb';
 import { Donation } from '@/lib/model/donation';
 
 export async function POST(request: Request) {
-    await dbConnect();
+  await dbConnect();
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -12,5 +12,5 @@ export async function POST(request: Request) {
   body.donor = session.user.id;
   const newDonation = await Donation.create(body);
 
-  return NextResponse.json({ donationId: newDonation });
+  return NextResponse.json(newDonation);
 }

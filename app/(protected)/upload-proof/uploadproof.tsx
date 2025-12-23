@@ -29,7 +29,7 @@ export default function UploadProof() {
                     <p className="text-lg font-medium">Send to:</p>
                     <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl">
                         <CreditCard className="text-blue-600" size={24} />
-                        <span className="font-mono text-gray-800">yourpaypal@example.com</span>
+                        <span className="font-mono text-gray-800">contact Customer care to review email</span>
                         <button
                             onClick={() => copyToClipboard('yourpaypal@example.com', 'paypal')}
                             className="ml-auto text-primary-600 hover:text-primary-800"
@@ -49,7 +49,7 @@ export default function UploadProof() {
                     <p className="text-lg font-medium">Send to:</p>
                     <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl">
                         <DollarSign className="text-green-600" size={24} />
-                        <span className="font-mono text-gray-800">$YourCashAppTag</span>
+                        <span className="font-mono text-gray-800">$contact_customer_care_to_review_tag</span>
                         <button
                             onClick={() => copyToClipboard('$YourCashAppTag', 'cashapp')}
                             className="ml-auto text-primary-600 hover:text-primary-800"
@@ -174,8 +174,9 @@ export default function UploadProof() {
 
                 {/* Upload Area */}
                 <CardBody className="p-8 space-y-6">
-                    <div
-                        className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${preview ? 'border-primary-500 bg-primary-50' : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
+                    <label
+                        htmlFor="file-upload"
+                        className={` cursor-pointer block border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${preview ? 'border-primary-500 bg-primary-50' : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
                             }`}
                     >
                         {preview ? (
@@ -191,12 +192,14 @@ export default function UploadProof() {
                             </>
                         )}
                         <input
+                            id='file-upload'
                             type="file"
                             accept="image/*,application/pdf"
                             onChange={handleFileChange}
-                            className="absolute inset-0 opacity-0 cursor-pointer size-32"
+                            className="inset-0 opacity-0  cursor-pointer bg-black z-999"
+                        
                         />
-                    </div>
+                    </label>
 
                     {/* Submit Button */}
                     <div className="text-center pt-6">

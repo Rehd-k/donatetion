@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { UserCircle } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
+import Link from 'next/link';
 
 export default async function Profile() {
     await dbConnect();
@@ -22,11 +23,12 @@ export default async function Profile() {
     const user = await User.findById(session?.user.id);
 
     return <>
-        <header className='p-4 bg-blue-50'>
-            <p className="md:text-xl text-base font-bold text-gray-600 flex items-center">
-                <UserCircle className="mr-2 text-primary" /> Profile
-            </p>
+        <header className="justify-between items-end mb-6 p-2 bg-blue-50 md:flex hidden fixed w-full ml-auto  z-999">
+
+            <Link href="/donate"><Button className="mt-4 md:mt-0">Donate Now</Button></Link>
+
         </header>
+        <div className="md:py-8"></div>
         <div className="space-y-8">
 
 

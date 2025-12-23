@@ -5,10 +5,11 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { Settings as SettingsIcon } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
+import Link from 'next/link';
 
 export default async function Settings() {
     await dbConnect();
-      const session = await auth();
+    const session = await auth();
     const { redirect } = await import('next/navigation');
 
     if (!session?.user) {
@@ -23,11 +24,12 @@ export default async function Settings() {
 
     return (
         <div className="space-y-8">
-            <header>
-                <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                    <SettingsIcon className="mr-2 text-primary" /> Settings
-                </h1>
+            <header className="justify-between items-end mb-6 p-2 bg-blue-50 md:flex hidden fixed w-full ml-auto  z-999">
+
+                <Link href="/donate"><Button className="mt-4 md:mt-0">Donate Now</Button></Link>
+
             </header>
+            <div className="md:py-8"></div>
 
             <Card className="bg-linear-to-br from-primary-light to-white">
                 <CardHeader>Account Preferences</CardHeader>

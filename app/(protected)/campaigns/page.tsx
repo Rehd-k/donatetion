@@ -12,6 +12,7 @@ import { User } from '@/lib/model/users';
 import { Campaign } from '@/lib/model/campaign';
 import CampaignsClient from './campaigns';
 import { DESIGN_TOKENS } from '@/lib/design-tokens';
+import Link from 'next/link';
 
 export default async function Campaigns() {
     await dbConnect();
@@ -33,12 +34,12 @@ export default async function Campaigns() {
 
 
     return <>
-        <div className="flex justify-between items-center mb-6 p-2 bg-blue-50">
-            <p className=" flex items-center md:text-xl text-base font-bold text-gray-700">
-                <Rocket className="mr-2 text-primary-500" /> All Campaigns
-            </p>
-            <Button variant="primary">Create Campaign</Button>
-        </div>
+        <header className="justify-between items-end mb-6 p-2 bg-blue-50 md:flex hidden fixed w-full ml-auto  z-999">
+
+            <Link href="/donate"><Button className="mt-4 md:mt-0">Donate Now</Button></Link>
+
+        </header>
+        <div className="md:py-8"></div>
         <div className={DESIGN_TOKENS.spacing.margin}>
 
             <div className="px-2">

@@ -9,6 +9,7 @@ import { User } from '@/lib/model/users';
 import dbConnect from '@/lib/mongodb';
 import LineChartComponent from '@/components/linechart';
 import PieChartComponent from '@/components/piechart';
+import Link from 'next/link';
 
 
 export default async function Dashboard() {
@@ -66,17 +67,14 @@ export default async function Dashboard() {
 
     return (
         <>
-            <header className="flex md:flex-row justify-between items-start md:items-center mb-6 p-2 bg-blue-50">
-                <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                    {/* <DollarSign className="mr-2 text-blue-600" /> Dashboard */}
-                </h1>
-                <Button className="mt-4 md:mt-0">Donate Now</Button>
-            </header>
+            <header className="justify-between items-end mb-6 p-2 bg-blue-50 md:flex hidden fixed w-full ml-auto  z-999">
 
+                <Link href="/donate"><Button className="mt-4 md:mt-0">Donate Now</Button></Link>
+
+            </header>
+            <div className="md:py-8"></div>
 
             <div className="space-y-8 px-2 text-gray-700">
-
-
                 {/* Overview Cards */}
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     <Card className="bg-linear-to-br from-blue-50 to-blue-100">
@@ -117,34 +115,36 @@ export default async function Dashboard() {
                 <Card>
                     <CardHeader>Recent Donations</CardHeader>
                     <CardBody>
-                        <table className="w-full table-auto">
-                            <thead>
-                                <tr className="text-left text-gray-600">
-                                    <th className="pb-2">Date</th>
-                                    <th>Campaign</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {userDonations.map((donation: any) => (
-                                    <tr key={donation._id} className="border-t">
-                                        <td className="py-2">{new Date(donation.createdAt).toLocaleDateString()}</td>
-                                        <td>{donation.campaign.title}</td>
-                                        <td>{formatCurrency(donation.amount, donation.currency)}</td>
+                        <div className="overflow-x-auto">
+                            <table className="w-full whitespace-nowrap text-xs md:text-base">
+                                <thead>
+                                    <tr className="text-left text-gray-600">
+                                        <th className="px-4 pb-2 whitespace-nowrap">Date</th>
+                                        <th className="whitespace-nowrap">Campaign</th>
+                                        <th className="px-4  whitespace-nowrap">Amount</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {userDonations.map((donation: any) => (
+                                        <tr key={donation._id} className="">
+                                            <td className="p-4 whitespace-nowrap">{new Date(donation.createdAt).toLocaleDateString()}</td>
+                                            <td className="w-92 whitespace-nowrap">{donation.campaign.title}</td>
+                                            <td className="p-4 whitespace-nowrap">{formatCurrency(donation.amount, donation.currency)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </CardBody>
                 </Card>
 
                 {/* Top Campaigns */}
                 <Card>
                     <CardHeader>Top Campaigns</CardHeader>
-                    <CardBody className="space-y-4">
+                    <CardBody className="space-y-4 text-xs md:text-base">
                         {topCampaigns.map((campaign: any) => (
-                            <div key={campaign._id} className="flex justify-between items-center p-4 bg-gray-50 rounded-md">
-                                <span className="font-medium">{campaign.title}</span>
+                            <div key={campaign._id} className="grid grid-cols-4 items-center p-4 bg-gray-50 rounded-md gap-5">
+                                <span className="font-medium col-span-3">{campaign.title}</span>
                                 <span>{formatCurrency(campaign.currentAmount, currency)} / {formatCurrency(campaign.targetAmount, currency)}</span>
                             </div>
                         ))}

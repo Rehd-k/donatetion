@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 import UploadProof from './uploadproof';
 import { auth } from '@/auth';
+import Link from 'next/link';
+import Button from '@/components/ui/Button';
 
 export default async function UploadProofPage() {
     const session = await auth();
@@ -16,6 +18,12 @@ export default async function UploadProofPage() {
     }
     return (
         <Suspense fallback={<div>Loading donation form...</div>}>
+            <header className="justify-between items-end mb-6 p-2 bg-blue-50 md:flex hidden fixed w-full ml-auto  z-999">
+
+                <Link href="/donate"><Button className="mt-4 md:mt-0">Donate Now</Button></Link>
+
+            </header>
+            <div className="md:py-8"></div>
             <UploadProof />
         </Suspense>
     );

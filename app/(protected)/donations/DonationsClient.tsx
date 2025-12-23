@@ -177,7 +177,7 @@ function ClientDonations({ currency }: { currency: string }) {
                     </div> */}
 
                     <div className="overflow-x-auto">
-                        <table className="w-full">
+                        <table className="w-full whitespace-nowrap text-xs md:text-base">
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="text-left p-4 font-medium">Date</th>
@@ -200,7 +200,7 @@ function ClientDonations({ currency }: { currency: string }) {
                                         return (
                                             <tr key={d._id} className="border-t hover:bg-gray-50">
                                                 <td className="p-4">{new Date(d.createdAt).toLocaleDateString()}</td>
-                                                <td className="p-4">{d.campaign?.title || 'General Donation'}</td>
+                                                <td className="p-4 w-92">{d.campaign?.title || 'General Donation'}</td>
                                                 <td className="p-4 font-medium">{formatCurrency(d.amount, d.currency)}</td>
                                                 <td className="p-4">
                                                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${isApproved ? 'bg-green-100 text-green-800' :

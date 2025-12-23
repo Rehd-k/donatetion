@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import dbConnect from "@/lib/mongodb";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,6 +48,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background-light dark:bg-background-dark text-[#111418] dark:text-white`}
       >
+        <NextTopLoader />
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
