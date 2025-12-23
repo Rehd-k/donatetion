@@ -9,7 +9,7 @@ import { useState } from "react";
 
 // Client component for save toggle (re-render on save)
 const CampaignsClient = ({ campaignsList, userFavorites, user }: { campaignsList: any, userFavorites: any[], user: any }) => {
-    const userInfo = JSON.parse(user);
+    const userInfo = user ? JSON.parse(user) : null;
     const campaigns = JSON.parse(campaignsList);
     const [favorites, setFavorites] = useState(userFavorites.map(f => f._id.toString()));
 
@@ -26,7 +26,7 @@ const CampaignsClient = ({ campaignsList, userFavorites, user }: { campaignsList
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {campaigns.map((camp: any) => {
                 const isSaved = favorites.includes(camp._id.toString());
                 return (
@@ -113,42 +113,24 @@ const CampaignsClient = ({ campaignsList, userFavorites, user }: { campaignsList
                                     <div className="flex justify-between items-center text-sm">
 
                                         <span className="font-bold text-[#111418] ">
-                                            {formatCurrency(camp.currentAmount, userInfo.currency)}
+                                            {formatCurrency(camp.currentAmount, userInfo ? userInfo.currency : null)}
                                             <span className="font-normal text-gray-500">{" "}raised</span>
                                         </span>
-                                        <span className="text-gray-500">of {formatCurrency(camp.targetAmount, userInfo.currency)}</span>
+                                        <span className="text-gray-500">of {formatCurrency(camp.targetAmount, userInfo ? userInfo.currency : null)}</span>
                                     </div>
                                 </div>
-                                <div className="flex space-x-2 w-full justify-between">
+                                {userInfo ? <div className="flex space-x-2 w-full justify-between">
                                     <Button variant="primary">
                                         <a href={`/donate?campaign=${camp._id}`}>Donate Now</a>
                                     </Button>
                                     <Button variant="outline" onClick={() => handleSave(camp._id.toString())}>
                                         {isSaved ? 'Saved' : 'Save'}
                                     </Button>
-                                </div>
+                                </div> : <></>}
+
                             </div>
                         </div>
-                        {/* <Card key={camp._id} className={DESIGN_TOKENS.components.card}>
-                            <CardHeader className="bg-primary-50">{camp.title}</CardHeader>
-                            <CardBody>
-                                <p className={DESIGN_TOKENS.typography.body + ' mb-2'}>{camp.description}</p>
-                                <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                                    <div className="bg-green-500 h-2.5 rounded-full" style={{ width: `${(camp.currentAmount / camp.targetAmount) * 100}%` }}></div>
-                                </div>
-                                <p className="text-sm font-medium text-primary-700 mb-4">
-                                    {formatCurrency(camp.currentAmount, userInfo.currency)} / {formatCurrency(camp.targetAmount, userInfo.currency)}
-                                </p>
-                                <div className="flex space-x-2">
-                                    <Button variant="primary">
-                                        <a href={`/donate?campaign=${camp._id}`}>Donate Now</a>
-                                    </Button>
-                                    <Button variant="outline" onClick={() => handleSave(camp._id.toString())}>
-                                        {isSaved ? 'Saved' : 'Save'}
-                                    </Button>
-                                </div>
-                            </CardBody>
-                        </Card> */}
+
                     </>
 
                 );

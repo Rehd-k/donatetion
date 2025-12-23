@@ -1,11 +1,23 @@
 import { auth } from "@/auth";
 import LogoutButton from "@/components/logout";
+import { Campaign } from "@/lib/model/campaign";
 import { Feather, FolderOpen, LogOut, Rss, SendToBack, University } from "lucide-react";
 import Link from "next/link";
+import CampaignsClient from "./(protected)/campaigns/campaigns";
+import dbConnect from "@/lib/mongodb";
+import { User } from "@/lib/model/users";
 
 export default async function AuraHome() {
+  await dbConnect();
   const session = await auth();
 
+  const user = await User.findById(session?.user.id);
+
+  console.log('User Info on Home Page:', session?.user);
+
+  const campaigns = await Campaign.find({}).lean().limit(3).sort({ createdAt: -1 });
+
+  const userFavorites = await User.findById(session?.user.id).populate('favorites');
 
   return <>
     <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
@@ -69,9 +81,9 @@ export default async function AuraHome() {
               <Link href="/dashboard" className="flex min-w-30 cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-blue-700 hover:bg-primary-dark transition-all text-white text-base font-bold shadow-lg transform hover:-translate-y-0.5">
                 <span className="truncate">Donate Now</span>
               </Link>
-              <button className="flex min-w-30 cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white text-base font-bold transition-all">
+              <Link href="donatetocampaigns" className="flex min-w-30 cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white text-base font-bold transition-all">
                 <span className="truncate">View Our Causes</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -142,125 +154,8 @@ export default async function AuraHome() {
               View All
             </a>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-            {/* Cause Card 1 */}
-            <div className="flex flex-col rounded-xl overflow-hidden bg-white  shadow-sm hover:shadow-md transition-shadow border border-[#dbe0e6] ">
-              <div
-                className="h-48 w-full bg-center bg-no-repeat bg-cover"
-                data-alt="Hands holding clean water"
-                style={{
-                  backgroundImage:
-                    'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAzfhxpqbusKTdhEn0RfqbG6xvaJCXfVBVS44usovZZYLEyx-7aGnBjkvsLwg0FODrrETpdQojcH8wK82f3JIerFfkM5FCvEfSrTwnUBlMbGIGNptVn7JkpWZO5u9EbMXUJlGiunuQFlid1vGVV8hj2xoBfy15jE_SCJxLhrpVWbt5wOSWi7Y2OqyG3TA2PuuKOmjYSc817wsQqwQbGW9aYkDRFlMB1wsvsL6tmMLdWhFFriIQYxJOby2DU-rEXcz2vIEaohyoeQg0G")'
-                }}
-              />
-              <div className="p-5 flex flex-col flex-1 gap-4">
-                <div>
-                  <h3 className="text-[#111418]  text-lg font-bold leading-normal">
-                    Clean Water Initiative
-                  </h3>
-                  <p className="text-[#617589]  text-sm leading-relaxed mt-1">
-                    Providing safe drinking water wells to remote villages in need
-                    of basic sanitation.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 mt-auto">
-                  <div className="flex justify-between text-sm font-medium">
-                    <span className="text-[#111418] ">
-                      $75,000 raised
-                    </span>
-                    <span className="text-primary">75%</span>
-                  </div>
-                  <div className="w-full bg-gray-200  rounded-full h-2">
-                    <div
-                      className="bg-primary h-2 rounded-full"
-                      style={{ width: "75%" }}
-                    />
-                  </div>
-                </div>
-                <button className="w-full mt-2 cursor-pointer rounded-lg h-10 bg-blue-700/10 hover:bg-blue-700 text-gray-700 hover:text-white transition-colors text-sm font-bold">
-                  Donate
-                </button>
-              </div>
-            </div>
-            {/* Cause Card 2 */}
-            <div className="flex flex-col rounded-xl overflow-hidden bg-white  shadow-sm hover:shadow-md transition-shadow border border-[#dbe0e6] ">
-              <div
-                className="h-48 w-full bg-center bg-no-repeat bg-cover"
-                data-alt="Children studying in a classroom"
-                style={{
-                  backgroundImage:
-                    'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYUSn2m3s-09Y17R4r5WZr10kACzIPQB0GvPq35SMxiiIonCezq_xy16aux0JUH1wJZ3lMQs_S5cG0m-wHiQ0e1GyZ8SLzoF4BQ46iI3utorPEoyHdOV6z-HHaK7umkBTxIUY_DKxVh-Y5z30EdgmxlI0uFL-nXxlZVql4xxPb0oJQNwy1bLWE3gr6y-ckQY0zKVsKa7DQcXVTds1q5wdjArPZ4z2gnIptV9DcYjpWtIHIIP4YmeUsIyR_ngn87TlvxuZ7NNPDETS1")'
-                }}
-              />
-              <div className="p-5 flex flex-col flex-1 gap-4">
-                <div>
-                  <h3 className="text-[#111418]  text-lg font-bold leading-normal">
-                    Education for All
-                  </h3>
-                  <p className="text-[#617589]  text-sm leading-relaxed mt-1">
-                    Building schools, supplying books, and supporting teachers in
-                    underserved regions.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 mt-auto">
-                  <div className="flex justify-between text-sm font-medium">
-                    <span className="text-[#111418] ">
-                      $48,000 raised
-                    </span>
-                    <span className="text-primary">60%</span>
-                  </div>
-                  <div className="w-full bg-gray-200  rounded-full h-2">
-                    <div
-                      className="bg-primary h-2 rounded-full"
-                      style={{ width: "60%" }}
-                    />
-                  </div>
-                </div>
-                <button className="w-full mt-2 cursor-pointer rounded-lg h-10 bg-primary/10 hover:bg-primary text-primary hover:text-white transition-colors text-sm font-bold">
-                  Donate
-                </button>
-              </div>
-            </div>
-            {/* Cause Card 3 */}
-            <div className="flex flex-col rounded-xl overflow-hidden bg-white  shadow-sm hover:shadow-md transition-shadow border border-[#dbe0e6] ">
-              <div
-                className="h-48 w-full bg-center bg-no-repeat bg-cover"
-                data-alt="Emergency relief supplies being distributed"
-                style={{
-                  backgroundImage:
-                    'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCVRw-5oY_kLKL4tZau10tAvn0UEHONuH5XcCxBzKunV5sODBcuibs_jl0M_ZdBBmvZMEWtVg3qjkyrCv2Dth0hEqalZstqukoV0nEwNmPNMWczcEU2Yo4oE6pk8EfvIY9O5ZOF_LGDan5zziM8qbxcvNwSKZXLpc1OWoWeGpnan2IzaUIDnsydgddVKqTUjazbU2AdQoGvak5C2NKwp6d1y_OTg_hzwHoec7gEekgkoFsLmBHz_79USUE0ugdX-MaVtpvis5fAkzJt")'
-                }}
-              />
-              <div className="p-5 flex flex-col flex-1 gap-4">
-                <div>
-                  <h3 className="text-[#111418]  text-lg font-bold leading-normal">
-                    Emergency Relief Fund
-                  </h3>
-                  <p className="text-[#617589]  text-sm leading-relaxed mt-1">
-                    Immediate aid, food, and medical supplies for
-                    disaster-stricken areas.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 mt-auto">
-                  <div className="flex justify-between text-sm font-medium">
-                    <span className="text-[#111418] ">
-                      $90,000 raised
-                    </span>
-                    <span className="text-primary">90%</span>
-                  </div>
-                  <div className="w-full bg-gray-200  rounded-full h-2">
-                    <div
-                      className="bg-primary h-2 rounded-full"
-                      style={{ width: "90%" }}
-                    />
-                  </div>
-                </div>
-                <button className="w-full mt-2 cursor-pointer rounded-lg h-10 bg-primary/10 hover:bg-primary text-primary hover:text-white transition-colors text-sm font-bold">
-                  Donate
-                </button>
-              </div>
-            </div>
-          </div>
+          <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={userFavorites || []} user={user ? JSON.stringify(user) : null} />
+
           <div className="mt-6 text-center md:hidden">
             <a className="text-primary font-bold hover:underline" href="#">
               View All Causes
@@ -436,9 +331,9 @@ export default async function AuraHome() {
             Every second counts. Your support today can provide food, water, and
             education to someone in need tomorrow.
           </p>
-          <button className="flex items-center justify-center rounded-lg h-14 px-10 bg-blue-50 text-gray-700 hover:bg-blue-100 transition-colors text-lg font-bold shadow-lg mt-4">
+          <Link href={'/donate'} className="flex items-center justify-center rounded-lg h-14 px-10 bg-blue-50 text-gray-700 hover:bg-blue-100 transition-colors text-lg font-bold shadow-lg mt-4">
             Donate Now
-          </button>
+          </Link>
         </div>
       </div>
       {/* Footer */}

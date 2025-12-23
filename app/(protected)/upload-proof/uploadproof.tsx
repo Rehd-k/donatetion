@@ -49,7 +49,7 @@ export default function UploadProof() {
                     <p className="text-lg font-medium">Send to:</p>
                     <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl">
                         <DollarSign className="text-green-600" size={24} />
-                        <span className="font-mono text-gray-800">$contact_customer_care_to_review_tag</span>
+                        <span className="font-mono text-gray-800">$contact customer care to review tag</span>
                         <button
                             onClick={() => copyToClipboard('$YourCashAppTag', 'cashapp')}
                             className="ml-auto text-primary-600 hover:text-primary-800"
@@ -197,7 +197,7 @@ export default function UploadProof() {
                             accept="image/*,application/pdf"
                             onChange={handleFileChange}
                             className="inset-0 opacity-0  cursor-pointer bg-black z-999"
-                        
+
                         />
                     </label>
 
