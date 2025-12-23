@@ -215,7 +215,7 @@ export default function AdminCampaigns() {
         if (!selectedCampaign) return;
 
         try {
-            const res = await fetch(`/api/admin/campaigns/${selectedCampaign._id}`, {
+            const res = await fetch(`/admin/campaigns/api/${selectedCampaign._id}`, {
                 method: 'DELETE',
             });
 
