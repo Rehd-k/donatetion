@@ -9,13 +9,17 @@ import { User } from "@/lib/model/users";
 
 export default async function AuraHome() {
   await dbConnect();
+  let user;
+  let userFavorites;
   const session = await auth();
-
-  const user = await User.findById(session?.user.id);
+  if (session) {
+    user = await User.findById(session?.user.id);
+    userFavorites = await User.findById(session?.user.id).populate('favorites');
+  }
 
   const campaigns = await Campaign.find({}).lean().limit(3).sort({ createdAt: -1 });
 
-  const userFavorites = await User.findById(session?.user.id).populate('favorites');
+
 
   return <>
     <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
@@ -152,7 +156,7 @@ export default async function AuraHome() {
               View All
             </a>
           </div>
-          <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={JSON.stringify(userFavorites.favorites) || JSON.stringify([])} user={user ? JSON.stringify(user) : null} />
+          <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={userFavorites ? JSON.stringify(userFavorites.favorites) : JSON.stringify([])} user={user ? JSON.stringify(user) : null} />
 
           <div className="mt-6 text-center md:hidden">
             <a className="text-primary font-bold hover:underline" href="#">

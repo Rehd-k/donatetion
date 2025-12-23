@@ -28,7 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         id: user._id.toString(),
                         name: user.firstName,
                         email: user.email,
-                        role: user.role, // Pass role to the session
+                        role: user.role,
                     };
                 }
 
@@ -39,14 +39,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.role = (user as any).role; // Attach role to the JWT
+                token.role = (user as any).role;
             }
             return token;
         },
         async session({ session, token }) {
             if (token.role && session.user && token.sub) {
-                session.user.role = token.role as string; // Attach role to the Session
-                session.user!.id = token.sub; // Attach user ID to the Session
+                session.user.role = token.role as string;
+                session.user!.id = token.sub;
             }
             return session;
         },
@@ -54,5 +54,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     pages: {
         signIn: "/login",
     },
-    // debug: process.env.NODE_ENV === 'development',
-})  
+    session: {
+        maxAge: 24 * 60 * 60, // 24 hours in seconds
+    },
+})
