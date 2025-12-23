@@ -287,7 +287,7 @@ export default function AdminUsers() {
             {/* Edit Modal */}
             <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <h2 className="text-2xl font-bold mb-6">Edit User</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-gray-600">Edit User</h2>
                     <div className="space-y-4">
                         <Input
                             label="First Name"
