@@ -2,7 +2,6 @@
 
 import dbConnect from "@/lib/mongodb";
 import { User } from "@/lib/model/users";
-import bcrypt from "bcryptjs";
 import { SignUpSchema } from "@/lib/zod";
 import { signIn } from "@/auth";
 
@@ -26,7 +25,7 @@ export const signUp = async (prevState: any, formData: FormData) => {
     }
 
     const { firstName, lastName, email, password, role } = validatedFields.data;
-    const hashedPassword = await bcrypt.hash(password, 10);
+
 
     try {
         const existingUser = await User.findOne({ email });
@@ -38,7 +37,7 @@ export const signUp = async (prevState: any, formData: FormData) => {
             firstName,
             lastName,
             email,
-            password: hashedPassword,
+            password,
             role,
         });
         // AUTO-LOGIN: This triggers the Credentials provider in your auth.ts

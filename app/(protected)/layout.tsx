@@ -91,7 +91,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         <div className="bg-gray-100 py-2 px-2 md:hidden">
-          <Button variant="ghost" size="sm" className="md:hidden mb-4" onClick={toggleSidebar}>
+          <Button variant="ghost" size="sm" className="md:hidden mb-4 flex" onClick={toggleSidebar}>
             <Menu size={20} className="mr-2" />
             Menu
           </Button>

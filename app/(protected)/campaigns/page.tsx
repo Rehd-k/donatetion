@@ -19,7 +19,8 @@ export default async function Campaigns() {
     const user = await User.findById(session?.user.id);
     const currency = user?.preferredCurrency || 'USD';
 
-    const campaigns = await Campaign.find({ }).sort({ createdAt: -1 });
+    const campaigns = await Campaign.find({}).lean().sort({ createdAt: -1 });
+
 
     return <>
         <div className="flex justify-between items-center mb-6 p-2 bg-blue-50">
@@ -31,7 +32,7 @@ export default async function Campaigns() {
         <div className={DESIGN_TOKENS.spacing.margin}>
 
             <div className="px-2">
-                <CampaignsClient campaigns={campaigns} userFavorites={user.favorites || []} user={JSON.stringify(user)} />
+                <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={user.favorites || []} user={JSON.stringify(user)} />
             </div>
         </div>
     </>

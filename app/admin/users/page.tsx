@@ -271,17 +271,20 @@ export default function AdminUsers() {
                         <Input
                             label="First Name"
                             value={formData.firstName}
+                            className='text-gray-700'
                             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                         />
                         <Input
                             label="Last Name"
                             value={formData.lastName}
+                             className='text-gray-700'
                             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                         />
                         <Input
                             label="Email"
                             type="email"
                             value={formData.email}
+                             className='text-gray-700'
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
                         <div>
@@ -289,7 +292,7 @@ export default function AdminUsers() {
                             <select
                                 value={formData.role}
                                 onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-600"
                             >
                                 <option value="user">Regular User</option>
                                 <option value="admin">Admin</option>
@@ -302,7 +305,7 @@ export default function AdminUsers() {
                             <select
                                 value={formData.preferredCurrency}
                                 onChange={(e) => setFormData({ ...formData, preferredCurrency: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-600"
                             >
                                 <option value="USD">USD ($)</option>
                                 <option value="EUR">EUR (€)</option>

@@ -366,7 +366,7 @@ export default function AdminDonations() {
                             <select
                                 value={formData.user}
                                 onChange={(e) => setFormData({ ...formData, user: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-600"
                                 required
                             >
                                 <option value="">Select a donor</option>
@@ -397,7 +397,7 @@ export default function AdminDonations() {
                             <select
                                 value={formData.campaign}
                                 onChange={(e) => setFormData({ ...formData, campaign: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-600"
                                 required
                             >
                                 <option value="">Select a campaign</option>
@@ -427,13 +427,14 @@ export default function AdminDonations() {
                             type="number"
                             value={formData.amount}
                             onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
+                            className='text-gray-600'
                         />
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
                             <select
                                 value={formData.currency}
                                 onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-600"
                             >
                                 <option value="USD">USD</option>
                                 <option value="EUR">EUR</option>
@@ -446,7 +447,7 @@ export default function AdminDonations() {
                             <select
                                 value={formData.status}
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-600"
                             >
                                 <option value="pending">Pending</option>
                                 <option value="confirmed">Confirmed</option>

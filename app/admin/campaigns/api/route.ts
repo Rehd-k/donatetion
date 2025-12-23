@@ -20,6 +20,7 @@ export async function GET(request: Request) {
     .sort({ createdAt: -1 })  // Newest first
     .skip((page - 1) * limit)
     .limit(limit)
+    .lean()
   // .select('title');
 
   const total = await Campaign.countDocuments();
@@ -29,32 +30,94 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  await dbConnect();
-
   const session = await auth();
-  if (session?.user?.role !== 'admin') {
+
+  if (!session || session.user?.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  try {
+    await dbConnect(); // Ensure DB is connected (if needed)
 
-  const body = await request.json();
+    const formData = await request.formData();
 
-  const { title, description, category, targetAmount, active = true, images = [], tags = [] } = body;
+    // Extract text fields
+    const title = formData.get('title') as string;
+    const description = formData.get('description') as string;
+    const category = formData.get('category') as string;
+    const targetAmount = Number(formData.get('targetAmount'));
+    const active = formData.get('active') === 'true';
+    const tags = JSON.parse(formData.get('tags') as string);
 
-  const newCampaign = await Campaign.create({
-    title,
-    description,
-    category,
-    targetAmount,
-    currentAmount: 0,
-    images,
-    tags,
-    active,
-    creator: session?.user?.id, // Optional: set to session.user.id if you want to assign to admin
-  });
+    // Handle images: mix of existing URLs (strings) and new File uploads
+    let finalImages: { url: string; public_id?: string }[] = [];
 
-  const populated = await Campaign.findById(newCampaign._id).populate('creator', 'name email');
+    // 1. Existing images (sent as JSON string array of URLs)
+    const imagesJson = formData.get('imagesJson');
+    if (imagesJson) {
+      const existingImageUrls: string[] = JSON.parse(imagesJson as string);
+      finalImages.push(
+        ...existingImageUrls.map((url) => ({
+          url,
+          // public_id might not be available if coming from old data; optional
+        }))
+      );
+    }
 
-  return NextResponse.json(populated, { status: 201 });
+    // 2. New uploaded files (multiple entries with key 'images')
+    const uploadedFiles = formData.getAll('images').filter((entry): entry is File => entry instanceof File && entry.size > 0);
+
+    if (uploadedFiles.length > 0) {
+      // Dynamic import to keep Cloudinary out of serverless bundle unless needed
+      const { v2: cloudinary } = await import('cloudinary');
+      cloudinary.config({ url: process.env.CLOUDINARY_URL });
+
+      const uploadPromises = uploadedFiles.map(async (file) => {
+        const buffer = await file.arrayBuffer();
+        const base64 = Buffer.from(buffer).toString('base64');
+        const dataUri = `data:${file.type};base64,${base64}`;
+
+        const result = await cloudinary.uploader.upload(dataUri, {
+          folder: 'campaigns',
+          resource_type: 'image',
+        });
+
+        return {
+          url: result.secure_url,
+          public_id: result.public_id,
+        };
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
+      finalImages.push(...uploadedImages);
+    }
+
+    // Create the campaign
+    const newCampaign = await Campaign.create({
+      title,
+      description,
+      category,
+      targetAmount,
+      currentAmount: 0,
+      images: finalImages,
+      tags,
+      active,
+      creator: session.user.id, // assuming your session has user.id
+    });
+
+    // Optionally populate creator info
+    const populated = await Campaign.findById(newCampaign._id).populate(
+      'creator',
+      'firstName email image' // add any fields you want
+    ).lean();
+
+    return NextResponse.json({ success: true, campaign: populated }, { status: 201 });
+  } catch (error: any) {
+    console.error('Campaign creation error:', error);
+    return NextResponse.json(
+      { error: 'Failed to create campaign', details: error.message },
+      { status: 500 }
+    );
+  }
 }
 

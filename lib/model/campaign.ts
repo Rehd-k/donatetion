@@ -6,7 +6,10 @@ export interface ICampaign extends Document {
     category: string;
     targetAmount: number;
     currentAmount: number;
-    images: string[];
+    images: {
+        url: { type: String, required: true },
+        public_id: { type: String, required: true }, // make required for safe deletion
+    }[];
     tags: string[];
     createdAt: Date;
     updatedAt: Date;
@@ -35,8 +38,9 @@ const campaignSchema = new Schema({
     },
     images: [
         {
-            type: String,
-        },
+            url: { type: String, required: true },
+            public_id: { type: String, required: true }, // make required for safe deletion
+        }
     ],
     tags: [
         {

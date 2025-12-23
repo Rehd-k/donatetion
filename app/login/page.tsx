@@ -18,12 +18,13 @@ export default function LoginPage() {
         const formData = new FormData(e.currentTarget);
         const email = formData.get("email");
         const password = formData.get("password");
-
         const result = await signIn("credentials", {
             email,
             password,
             redirect: false, // prevents page reload
         });
+        console.log(result)
+
 
         if (result?.error) {
             toast.error("Invalid email or password");

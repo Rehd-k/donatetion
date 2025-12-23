@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials";
 import z from "zod";
@@ -23,10 +22,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 const user = await User.findOne({ email });
                 if (!user || !user.password) return null;
 
-                // 3. Check password
-                const passwordsMatch = await bcrypt.compare(password, user.password);
 
-                if (passwordsMatch) {
+                if (password === user.password) {
                     return {
                         id: user._id.toString(),
                         name: user.firstName,

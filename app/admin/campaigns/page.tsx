@@ -40,7 +40,7 @@ export default function AdminCampaigns() {
         category: '',
         targetAmount: 1000,
         active: true,
-        images: [] as string[],
+        images: [] as File[],
         tags: [] as string[],
     });
 
@@ -83,7 +83,7 @@ export default function AdminCampaigns() {
             category: '',
             targetAmount: 1000,
             active: true,
-            images: [] as string[],
+            images: [] as File[],
             tags: [] as string[],
         });
     };
@@ -101,7 +101,7 @@ export default function AdminCampaigns() {
             targetAmount: campaign.targetAmount,
             active: campaign.active,
             category: campaign.category,
-            images: [] as string[],
+            images: [] as File[],
             tags: [] as string[],
         });
         setIsEditModalOpen(true);
@@ -119,18 +119,32 @@ export default function AdminCampaigns() {
         }
 
         try {
+            const payload = new FormData();
+            payload.append('title', formData.title);
+            payload.append('description', formData.description);
+            payload.append('category', formData.category);
+            payload.append('targetAmount', String(formData.targetAmount));
+            payload.append('active', String(formData.active));
+            payload.append('tags', JSON.stringify(formData.tags));
+
+
+            if (formData.images && formData.images.length > 0) {
+                const first = (formData.images as any)[0];
+                if (typeof first === 'string') {
+                    payload.append('imagesJson', JSON.stringify(formData.images));
+                } else {
+                    (formData.images as any[]).forEach((file, i) => {
+                        payload.append('images', file);
+                    });
+                }
+            }
+
+
+
             const res = await fetch('/admin/campaigns/api', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: formData.title,
-                    description: formData.description,
-                    category: formData.category,
-                    targetAmount: formData.targetAmount,
-                    active: formData.active,
-                    images: formData.images,     // ← Now included
-                    tags: formData.tags,
-                }),
+                // DO NOT set Content-Type header for FormData; browser will set the boundary
+                body: payload,
             });
 
             if (res.ok) {
@@ -198,7 +212,7 @@ export default function AdminCampaigns() {
         goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
 
     return (
-        <div className={DESIGN_TOKENS.spacing.margin}>
+        <div className={DESIGN_TOKENS.spacing.margin + 'text-gray-700'}>
             <div className="flex justify-between items-center mb-8">
                 <p className="md:text-3xl text-base font-bold text-gray-900 flex items-center gap-3">
                     <Megaphone className="text-primary-600" />
@@ -354,7 +368,7 @@ export default function AdminCampaigns() {
             </Card>
 
             {/* Create Modal */}
-            <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} className='overflow-scroll h-screen'>
+            <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} className='overflow-scroll h-screen text-gray-600'>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                     <h2 className="text-2xl font-bold mb-6">Create New Campaign</h2>
                     <div className="space-y-4">
@@ -363,6 +377,7 @@ export default function AdminCampaigns() {
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             placeholder="e.g. Help Flood Victims"
+                            className='text-gray-600'
                         />
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -373,11 +388,12 @@ export default function AdminCampaigns() {
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 rows={4}
                                 placeholder="Describe the purpose of this campaign..."
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-600"
                             />
                         </div>
                         <Input
                             label="Category *"
+                            className='text-gray-600'
                             value={formData.category}
                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                         />
@@ -385,6 +401,7 @@ export default function AdminCampaigns() {
                         <Input
                             label="Target Amount ($)"
                             type="number"
+                            className='text-gray-600'
                             value={formData.targetAmount}
                             onChange={(e) => setFormData({ ...formData, targetAmount: Number(e.target.value) })}
                         />
@@ -393,7 +410,7 @@ export default function AdminCampaigns() {
                                 type="checkbox"
                                 checked={formData.active}
                                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                                className="w-5 h-5 text-primary-600 rounded focus:ring-primary-500"
+                                className="w-5 h-5 text-primary-600 rounded focus:ring-primary-500 text-gray-600"
                             />
                             <span className="text-sm font-medium text-gray-700">Active (visible to users)</span>
                         </label>
@@ -406,46 +423,17 @@ export default function AdminCampaigns() {
                                 type="file"
                                 accept="image/*"
                                 multiple
-                                onChange={async (e) => {
-                                    const files = e.target.files;
-                                    if (!files || files.length === 0) return;
-
-                                    const uploadPromises = Array.from(files).map(async (file) => {
-                                        const formData = new FormData();
-                                        formData.append('image', file);
-
-                                        try {
-                                            const res = await fetch('/api/upload', {
-                                                method: 'POST',
-                                                body: formData,
-                                            });
-                                            const data = await res.json();
-                                            if (res.ok) {
-                                                return data.url; // e.g., Cloudinary or your upload endpoint returns URL
-                                            } else {
-                                                toast.error(`Failed to upload ${file.name}`);
-                                                return null;
-                                            }
-                                        } catch (err) {
-                                            toast.error(`Error uploading ${file.name}`);
-                                            return null;
-                                        }
-                                    });
-
-                                    const uploadedUrls = (await Promise.all(uploadPromises)).filter(url => url !== null) as string[];
-                                    setFormData(prev => ({ ...prev, images: [...prev.images, ...uploadedUrls] }));
-                                    toast.success(`${uploadedUrls.length} image(s) uploaded`);
-                                }}
+                                onChange={(e) => setFormData({ ...formData, images: Array.from(e.target.files ?? []) })}
                                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
                             />
 
                             {/* Preview uploaded images */}
                             {formData.images.length > 0 && (
                                 <div className="mt-4 grid grid-cols-3 gap-4">
-                                    {formData.images.map((url, index) => (
+                                    {formData.images.map((file, index) => (
                                         <div key={index} className="relative group">
                                             <img
-                                                src={url}
+                                                src={URL.createObjectURL(file)}
                                                 alt={`Upload ${index + 1}`}
                                                 className="w-full h-32 object-cover rounded-lg border"
                                             />
@@ -458,7 +446,7 @@ export default function AdminCampaigns() {
                                                 }}
                                                 className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
                                             >
-                                                ×
+                                                x
                                             </button>
                                         </div>
                                     ))}
