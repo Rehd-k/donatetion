@@ -10,6 +10,26 @@ import { signOut, useSession } from 'next-auth/react';
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === 'loading') return;
+
+    if (!session) {
+      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+        window.location.href = '/login';
+      }
+      return;
+    }
+
+    const role = (session as any)?.user?.role;
+    if (role === 'admin') {
+      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/admin')) {
+        window.location.href = '/admin';
+      }
+    }
+  }, [session, status]);
+
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 

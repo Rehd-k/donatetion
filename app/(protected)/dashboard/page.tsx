@@ -13,9 +13,18 @@ import PieChartComponent from '@/components/piechart';
 
 export default async function Dashboard() {
     await dbConnect();
-
     // Fetch user (from session)
     const session = await auth();
+    const { redirect } = await import('next/navigation');
+
+    if (!session?.user) {
+        redirect('/login');
+    } else {
+
+        if (session.user?.role === 'admin' || session.user?.role === 'admin') {
+            redirect('/admin');
+        }
+    }
     const user = await User.findById(session?.user?.id);
     const currency = user?.preferredCurrency || 'USD';
 

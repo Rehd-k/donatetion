@@ -10,11 +10,19 @@ import ClientDonations from './DonationsClient';
 export default async function MyDonations() {
     await dbConnect();
     const session = await auth();
-    if (!session?.user.id) {
-        // Handle unauthorized, e.g., redirect to login
-        return <div>Unauthorized</div>;
+    const { redirect } = await import('next/navigation');
+
+    if (!session?.user) {
+        redirect('/login');
+        return;
+    } else {
+
+        if (session.user?.role === 'admin' || session.user?.role === 'admin') {
+            redirect('/admin');
+            return;
+        }
     }
-    const user = await User.findById(session.user.id);
+    const user = await User.findById(session?.user.id);
     const currency = user?.preferredCurrency || 'USD';
 
     return (

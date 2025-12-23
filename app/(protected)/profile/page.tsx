@@ -9,6 +9,16 @@ import dbConnect from '@/lib/mongodb';
 export default async function Profile() {
     await dbConnect();
     const session = await auth();
+    const { redirect } = await import('next/navigation');
+
+    if (!session?.user) {
+        redirect('/login');
+    } else {
+
+        if (session.user?.role === 'admin' || session.user?.role === 'admin') {
+            redirect('/admin');
+        }
+    }
     const user = await User.findById(session?.user.id);
 
     return <>

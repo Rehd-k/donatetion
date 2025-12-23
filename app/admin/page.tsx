@@ -16,9 +16,22 @@ import { Donation } from '@/lib/model/donation';
 import dbConnect from '@/lib/mongodb';
 import { User } from '@/lib/model/users';
 import DashbaordCharts from './dashboardcharts';
+import { auth } from '@/auth';
 
 export default async function AdminDashboard() {
     await dbConnect();
+
+    const session = await auth();
+    const { redirect } = await import('next/navigation');
+
+    if (!session?.user) {
+        redirect('/login');
+    } else {
+
+        if (session.user?.role === 'user' || session.user?.role === 'user') {
+            redirect('/dashboard');
+        }
+    }
 
     // Core Stats
     const totalUsers = await User.countDocuments();

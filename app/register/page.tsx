@@ -6,11 +6,14 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { Feather } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function SignUpPage() {
     // state will hold the return value from your signUp action
     const [state, formAction, isPending] = useActionState(signUp, null);
     const router = useRouter();
+
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         if (state?.success) {
@@ -21,7 +24,27 @@ export default function SignUpPage() {
         if (state?.message && !state.success) {
             toast.error(state.message);
         }
-    }, [state, router]);
+
+        if (status === 'loading') return;
+
+        if (!session) {
+
+            return;
+        }
+
+        const role = (session as any)?.user?.role;
+        if (role === 'user') {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/dashboard')) {
+                window.location.href = '/dashboard';
+            }
+        }
+
+        if (role === 'admin') {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/admin')) {
+                window.location.href = '/admin';
+            }
+        }
+    }, [state, router, session, status]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 text-gray-700">

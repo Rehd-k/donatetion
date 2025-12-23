@@ -11,6 +11,7 @@ import { Users, Search, Edit, Trash2, Crown } from 'lucide-react';
 import { DESIGN_TOKENS } from '@/lib/design-tokens';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
 
 type UserType = {
     _id: string;
@@ -38,6 +39,26 @@ export default function AdminUsers() {
         role: 'user' as 'user' | 'admin',
         preferredCurrency: 'USD',
     });
+    const { data: session, status } = useSession();
+
+    useEffect(() => {
+        if (status === 'loading') return;
+
+        if (!session) {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+                window.location.href = '/login';
+            }
+            return;
+        }
+
+        const role = (session as any)?.user?.role;
+
+        if (role === 'user') {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/dashboard')) {
+                window.location.href = '/dashboard';
+            }
+        }
+    }, [session, status]);
 
     // Fetch users on mount
     useEffect(() => {
@@ -277,14 +298,14 @@ export default function AdminUsers() {
                         <Input
                             label="Last Name"
                             value={formData.lastName}
-                             className='text-gray-700'
+                            className='text-gray-700'
                             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                         />
                         <Input
                             label="Email"
                             type="email"
                             value={formData.email}
-                             className='text-gray-700'
+                            className='text-gray-700'
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
                         <div>

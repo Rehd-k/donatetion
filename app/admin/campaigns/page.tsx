@@ -11,6 +11,7 @@ import { DESIGN_TOKENS } from '@/lib/design-tokens';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 type CampaignType = {
     _id: string;
@@ -43,6 +44,25 @@ export default function AdminCampaigns() {
         images: [] as File[],
         tags: [] as string[],
     });
+    const { data: session, status } = useSession();
+
+    useEffect(() => {
+        if (status === 'loading') return;
+
+        if (!session) {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+                window.location.href = '/login';
+            }
+            return;
+        }
+
+        const role = (session as any)?.user?.role;
+        if (role === 'user') {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/dashboard')) {
+                window.location.href = '/dashboard';
+            }
+        }
+    }, [session, status]);
 
     // Fetch campaigns with populated creator
     useEffect(() => {
@@ -74,6 +94,9 @@ export default function AdminCampaigns() {
             setFilteredCampaigns(campaigns);
         }
     }, [searchTerm, campaigns]);
+
+
+
 
 
     const resetForm = () => {

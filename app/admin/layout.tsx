@@ -1,7 +1,7 @@
 // ./app/(admin)/layout.tsx
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -16,7 +16,7 @@ import {
   Feather
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 const adminNavLinks = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -28,6 +28,26 @@ const adminNavLinks = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === 'loading') return;
+
+    if (!session) {
+      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+        window.location.href = '/login';
+      }
+      return;
+    }
+
+    const role = (session as any)?.user?.role;
+    if (role === 'user') {
+      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/dashboard')) {
+        window.location.href = '/dashboard';
+      }
+    }
+  }, [session, status]);
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-700">

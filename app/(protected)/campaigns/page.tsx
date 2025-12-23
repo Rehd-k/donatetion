@@ -16,6 +16,16 @@ import { DESIGN_TOKENS } from '@/lib/design-tokens';
 export default async function Campaigns() {
     await dbConnect();
     const session = await auth();
+    const { redirect } = await import('next/navigation');
+
+    if (!session?.user) {
+        redirect('/login');
+    } else {
+
+        if (session.user?.role === 'admin' || session.user?.role === 'admin') {
+            redirect('/admin');
+        }
+    }
     const user = await User.findById(session?.user.id);
     const currency = user?.preferredCurrency || 'USD';
 

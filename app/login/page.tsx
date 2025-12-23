@@ -1,15 +1,39 @@
 'use client'
 
 import { Feather } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+
+    const { data: session, status } = useSession();
+
+    useEffect(() => {
+        if (status === 'loading') return;
+
+        if (!session) {
+           
+            return;
+        }
+
+        const role = (session as any)?.user?.role;
+        if (role === 'user') {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/dashboard')) {
+                window.location.href = '/dashboard';
+            }
+        }
+
+         if (role === 'admin') {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/admin')) {
+                window.location.href = '/admin';
+            }
+        }
+    }, [session, status]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
