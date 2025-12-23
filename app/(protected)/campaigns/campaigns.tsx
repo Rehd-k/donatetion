@@ -2,16 +2,15 @@
 
 
 import Button from "@/components/ui/Button";
-import { Card, CardBody, CardHeader } from "@/components/ui/Card";
-import { formatCurrency } from "@/lib/currency";
-import { DESIGN_TOKENS } from "@/lib/design-tokens";
+import { formatCurrency } from "@/lib/currency"
 import { useState } from "react";
 
 // Client component for save toggle (re-render on save)
-const CampaignsClient = ({ campaignsList, userFavorites, user }: { campaignsList: any, userFavorites: any[], user: any }) => {
+const CampaignsClient = ({ campaignsList, userFavorites, user }: { campaignsList: any, userFavorites: any, user: any }) => {
     const userInfo = user ? JSON.parse(user) : null;
     const campaigns = JSON.parse(campaignsList);
-    const [favorites, setFavorites] = useState(userFavorites.map(f => f._id.toString()));
+    const favs = JSON.parse(userFavorites)
+    const [favorites, setFavorites] = useState(favs.map((f: { _id: { toString: () => any; }; }) => f._id.toString()));
 
     const handleSave = async (campaignId: string) => {
         const isSaved = favorites.includes(campaignId);
@@ -21,7 +20,7 @@ const CampaignsClient = ({ campaignsList, userFavorites, user }: { campaignsList
             body: JSON.stringify({ campaignId, action: isSaved ? 'remove' : 'add' }),
         });
         if (res.ok) {
-            setFavorites(isSaved ? favorites.filter(id => id !== campaignId) : [...favorites, campaignId]);
+            setFavorites(isSaved ? favorites.filter((id: string) => id !== campaignId) : [...favorites, campaignId]);
         }
     };
 

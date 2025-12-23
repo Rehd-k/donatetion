@@ -14,7 +14,6 @@ ChartJS.register(
 );
 
 const LineChartComponent = ({ lineChartData }: any) => {
-    console.log(lineChartData)
     return <Card>
         <CardHeader>Donation Trends (Last 6 Months)</CardHeader>
         <CardBody>

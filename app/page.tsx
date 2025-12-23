@@ -13,8 +13,6 @@ export default async function AuraHome() {
 
   const user = await User.findById(session?.user.id);
 
-  console.log('User Info on Home Page:', session?.user);
-
   const campaigns = await Campaign.find({}).lean().limit(3).sort({ createdAt: -1 });
 
   const userFavorites = await User.findById(session?.user.id).populate('favorites');
@@ -154,7 +152,7 @@ export default async function AuraHome() {
               View All
             </a>
           </div>
-          <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={userFavorites || []} user={user ? JSON.stringify(user) : null} />
+          <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={JSON.stringify(userFavorites.favorites) || JSON.stringify([])} user={user ? JSON.stringify(user) : null} />
 
           <div className="mt-6 text-center md:hidden">
             <a className="text-primary font-bold hover:underline" href="#">
