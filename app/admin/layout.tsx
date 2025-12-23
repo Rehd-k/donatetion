@@ -97,19 +97,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             })}
           </ul>
 
-          <div className="mt-8 pt-8 border-t">
-            <Button variant="outline" className="w-full justify-start" onClick={() =>
-              signOut({
-                callbackUrl: '/login', // where to redirect after logout
-              })
-            }>
-              <div className="flex items-center gap-3">
-                <LogOut className="w-5 h-5" />
-                Logout
-              </div>
-            </Button>
-          </div>
+
         </nav>
+        <div className="mt-8 pt-8 border-t">
+          <Button variant="outline" className="w-full justify-start" onClick={() =>
+            signOut({
+              callbackUrl: '/login', // where to redirect after logout
+            })
+          }>
+            <div className="flex items-center gap-3">
+              <LogOut className="w-5 h-5" />
+              Logout
+            </div>
+          </Button>
+        </div>
       </aside>
 
       {/* Mobile Overlay */}

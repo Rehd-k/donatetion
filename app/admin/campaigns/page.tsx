@@ -271,8 +271,8 @@ export default function AdminCampaigns() {
                 <CardHeader>Campaigns List ({filteredCampaigns.length})</CardHeader>
                 <CardBody>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-primary-50">
+                        <table className="w-full whitespace-nowrap text-xs md:text-base">
+                            <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-primary-700 uppercase">
                                         Title
@@ -300,7 +300,7 @@ export default function AdminCampaigns() {
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {filteredCampaigns.map((campaign) => (
                                     <tr key={campaign._id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                                        <td className="px-6 py-4 w-92 text-sm font-medium text-gray-900">
                                             {campaign.title}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-600">

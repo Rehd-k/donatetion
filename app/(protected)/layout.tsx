@@ -63,7 +63,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
             </h2>
           </Link>
         </div>
-
+ 
         <nav className="flex-1 p-4">
           <ul className="space-y-2">
             {navLinks.slice(0, -1).map((link) => (
