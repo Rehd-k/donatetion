@@ -59,7 +59,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
               <Feather className="text-green-800" />
             </div>
             <h2 className="text-[#111418]  text-xl font-bold leading-tight tracking-[-0.015em]">
-              HopeGive
+              HopeFundr
             </h2>
           </Link>
         </div>
@@ -133,7 +133,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
                       <path d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.84 0-16-7.16-16-16S15.16 8 24 8s16 7.16 16 16-7.16 16-16 16zm-2-26h4v12h-4V14zm0 16h4v4h-4v-4z" />
                     </svg>
                   </div>
-                  <span className="text-lg font-bold">HopeGive</span>
+                  <span className="text-lg font-bold">HopeFundr</span>
                 </div>
                 <p className="text-sm text-[#617589] leading-relaxed">
                   Empowering communities and saving lives through direct,
@@ -254,7 +254,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-sm text-[#617589] ">
-                © 2023 HopeGive Inc. All rights reserved.
+                © 2023 HopeFundr Inc. All rights reserved.
               </p>
               <div className="flex gap-6 text-sm text-[#617589]">
                 <a className="hover:text-primary transition-colors" href="#">

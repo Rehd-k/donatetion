@@ -64,11 +64,17 @@ export default function AdminCampaigns() {
         }
     }, [session, status]);
 
+    async function seedDB() {
+        const res = await fetch(`/admin/campaigns/api`, {
+            method: 'PUT'
+        });
+    }
+
     // Fetch campaigns with populated creator
     useEffect(() => {
         const fetchCampaigns = async () => {
             try {
-                const res = await fetch('/admin/campaigns/api');
+                const res = await fetch(`/admin/campaigns/api`);
                 if (res.ok) {
                     const data = await res.json();
                     setCampaigns(data.campaigns);
@@ -94,10 +100,6 @@ export default function AdminCampaigns() {
             setFilteredCampaigns(campaigns);
         }
     }, [searchTerm, campaigns]);
-
-
-
-
 
     const resetForm = () => {
         setFormData({
@@ -240,6 +242,7 @@ export default function AdminCampaigns() {
                 <p className="md:text-3xl text-base font-bold text-gray-900 flex items-center gap-3">
                     <Megaphone className="text-primary-600" />
                     Manage Campaigns
+                    {/* <button onClick={seedDB}>Post DB</button> */}
                 </p>
                 <Button variant="primary" onClick={openCreateModal} className='flex'>
                     <Plus className="w-5 h-5 mr-2" />
@@ -414,12 +417,29 @@ export default function AdminCampaigns() {
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-600"
                             />
                         </div>
-                        <Input
-                            label="Category *"
-                            className='text-gray-600'
-                            value={formData.category}
-                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        />
+                        <div className="flex flex-col gap-1">
+                            <label className="text-sm font-medium text-gray-700">
+                                Category *
+                            </label>
+                            <select
+                                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-600 bg-white"
+                                value={formData.category}
+                                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                required
+                            >
+                                <option value="" disabled>
+                                    Select a category
+                                </option>
+                                <option value="medical">Medical</option>
+                                <option value="education">Education</option>
+                                <option value="environment">Environment</option>
+                                <option value="emergency">Emergency</option>
+                                <option value="food security">Food Security</option>
+                                <option value="physical health">Physical Health</option>
+                                <option value="animals">Animals</option>
+                                <option value="clean water">Clean Water</option>
+                            </select>
+                        </div>
 
                         <Input
                             label="Target Amount ($)"

@@ -54,7 +54,7 @@ export default function SignUpPage() {
                         <Feather className="text-green-800" />
                     </div>
                     <h2 className="text-[#111418]  text-xl font-bold leading-tight tracking-[-0.015em]">
-                        HopeGive
+                        HopeFundr
                     </h2>
                 </Link>
                 <h1 className="text-3xl font-bold text-center text-emerald-700 mb-2">Join Our Cause</h1>

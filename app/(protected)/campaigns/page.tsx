@@ -43,7 +43,7 @@ export default async function Campaigns() {
         <div className={DESIGN_TOKENS.spacing.margin}>
 
             <div className="px-2">
-                <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={user.favorites || []} user={JSON.stringify(user)} />
+                <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={user ? user.favorites : []} user={JSON.stringify(user)} />
             </div>
         </div>
     </>

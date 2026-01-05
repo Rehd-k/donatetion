@@ -65,7 +65,7 @@ export default function LoginPage() {
                         <Feather className="text-green-800" />
                     </div>
                     <h2 className="text-[#111418]  text-xl font-bold leading-tight tracking-[-0.015em]">
-                        HopeGive
+                        HopeFundr
                     </h2>
                 </Link>
                 <div className="text-2xl font-bold mb-6 text-center flex-col md:flex justify-center">
