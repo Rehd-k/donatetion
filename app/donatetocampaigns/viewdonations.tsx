@@ -37,8 +37,7 @@ const ViewDonations = () => {
                 } else {
                     toast.error('Failed to load campaigns');
                 }
-                setCampaigns([]);
-                setFilteredCampaigns([]);
+                
             } catch {
                 toast.error('Error loading campaigns');
             }
@@ -166,6 +165,11 @@ const ViewDonations = () => {
                     </div>
                 </div>
                 {/* Campaigns Grid */}
+                {campaigns.map((data) => {
+                    return <p>{data.active}</p>
+                })
+
+                }
                 <CampaignsClient campaignsList={JSON.stringify(campaigns)} userFavorites={JSON.stringify([])} user={null} />
 
                 {/* Pagination / Load More */}

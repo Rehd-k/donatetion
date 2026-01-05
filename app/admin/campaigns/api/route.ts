@@ -13,6 +13,7 @@ export async function GET(request: Request) {
   const limit = parseInt(searchParams.get('limit') || '10');
   const category = searchParams.get('category') || 'all';
 
+ 
   const campaigns = await Campaign.find({ category: category === 'all' ? { $exists: true } : category })
     .sort({ createdAt: -1 })  // Newest first
     .skip((page - 1) * limit)
@@ -22,7 +23,6 @@ export async function GET(request: Request) {
 
   const total = await Campaign.countDocuments();
   const hasMore = page * limit < total;
-
   return NextResponse.json({ campaigns, hasMore });
 }
 

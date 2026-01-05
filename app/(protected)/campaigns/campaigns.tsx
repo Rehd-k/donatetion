@@ -9,6 +9,7 @@ import { useState } from "react";
 const CampaignsClient = ({ campaignsList, userFavorites, user }: { campaignsList: any, userFavorites: any, user: any }) => {
     const userInfo = user ? JSON.parse(user) : null;
     const campaigns = JSON.parse(campaignsList);
+    console.log(campaigns)
     let favs = [];
     if (userFavorites.length > 1) {
         favs = JSON.parse(userFavorites)

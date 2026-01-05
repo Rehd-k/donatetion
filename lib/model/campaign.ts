@@ -27,6 +27,7 @@ const campaignSchema = new Schema({
     category: {
         type: String,
         required: true,
+        lowercase: true,
     },
     targetAmount: {               // ← Renamed from goalAmount to match your model
         type: Number,
