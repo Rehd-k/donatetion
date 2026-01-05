@@ -64,11 +64,11 @@ export default function AdminCampaigns() {
         }
     }, [session, status]);
 
-    async function seedDB() {
-        const res = await fetch(`/admin/campaigns/api`, {
-            method: 'PUT'
-        });
-    }
+    // async function seedDB() {
+    //     const res = await fetch(`/admin/campaigns/api`, {
+    //         method: 'PUT'
+    //     });
+    // }
 
     // Fetch campaigns with populated creator
     useEffect(() => {
