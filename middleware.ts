@@ -1,7 +1,14 @@
-import { auth as middleware  } from "@/auth";
+// middleware.ts
+import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
 import { NextResponse } from "next/server";
 
-export default middleware((req) => {
+// 1. Initialize NextAuth with the edge-safe config
+const { auth } = NextAuth(authConfig);
+
+// 2. Export the middleware
+export default auth((req) => {
+  // req.auth is automatically populated by the wrapper
   const isLoggedIn = !!req.auth;
   const isAdmin = req.auth?.user?.role === "admin";
   const { nextUrl } = req;
@@ -25,6 +32,6 @@ export default middleware((req) => {
 
 // Configure which routes the middleware runs on
 export const config = {
-  matcher: ["/admin/:path*", ],
-  runtime: "nodejs",
+  matcher: ["/admin/:path*", "/secure/:path*"], // Added secure to matcher just in case
+  // runtime: "nodejs", // You generally don't need to force nodejs here anymore with this fix
 };
